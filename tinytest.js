@@ -74,6 +74,12 @@ var TinyTest = {
             throw new Error('assertEquals() "' + expected + '" != "' + actual + '"');
         }
     },
+    
+    assertNotEquals: function(expected, actual) {
+        if (expected == actual) {
+            throw new Error('assertNotEquals() "' + expected + '" == "' + actual + '"');
+        }
+    },
 
     assertStrictEquals: function(expected, actual) {
         if (expected !== actual) {
@@ -88,4 +94,5 @@ var fail               = TinyTest.fail.bind(TinyTest),
     assertEquals       = TinyTest.assertEquals.bind(TinyTest),
     eq                 = TinyTest.assertEquals.bind(TinyTest), // alias for assertEquals
     assertStrictEquals = TinyTest.assertStrictEquals.bind(TinyTest),
-    tests              = TinyTest.run.bind(TinyTest);
+    tests              = TinyTest.run.bind(TinyTest),
+    noteq              = TinyTest.assertNotEquals.bind(TinyTest);
