@@ -21,20 +21,30 @@
 //   console.log(originalArray);
 // });
 
-function forEach(array, callback) {
+// Example 5:
+// obj = { test: "test property" };
+// forEach([1,2,3], function(number, index, originalArray) {
+//   console.log(this.test);
+// }, obj);
+
+function forEach(array, callback, optionalThisObject) {
+  let forEachCallback = callback;
+  if(optionalThisObject) {
+    forEachCallback = callback.bind(optionalThisObject);
+  }
+  
   for(let i = 0; i < array.length; i++) {
-    callback(array[i], i, array);
+    forEachCallback(array[i], i, array);
   }
 };
 
 tests({
   'It should run the callback function array.length times': function() {
-    let counter = 0;
+    let numberOfTimesCallbackHasrun = 0;
     forEach([1,2,3], function() {
-      counter++;
-      console.log('hi');
+      numberOfTimesCallbackHasrun++;
     });
-    eq(counter, 3);
+    eq(numberOfTimesCallbackHasrun, 3);
   },
   'It should pass in the ith element as the first argument to the callback': function() {
     forEach([1], function(number) {
@@ -52,5 +62,21 @@ tests({
       eq(originalArray, testArray);
     });
   },
+  'It should pass in a configurable this object as the third argument of the forEach function': function () {
+    forEach([1,2,3], function(number, index, originalArray) {
+      eq(this.test, 'I should be accessible inside the callback');
+    }, { test: 'I should be accessible inside the callback'});
+  },
+  'It should pass in the ith element as the first argument to the callback with an optional this object': function() {
+    forEach([1], function(number, index, originalArray) {
+      eq(number, 1);
+    }, { test: 'I should be accessible inside the callback'});
+  },
+  'It should pass in the original array as the third argument to the callback with an optional this object': function() {
+    let testArray = [1,2,3];
+    forEach(testArray, function(number, index, originalArray) {
+      eq(originalArray, testArray);
+    }, { test: 'I should be accessible inside the callback'});
+  }
 });
 </script>
