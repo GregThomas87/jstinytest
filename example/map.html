@@ -26,16 +26,32 @@
 // }, { test: 'Greg' });
 
 // Example 6:
-// let testArray = [1,2,3];
+// let originalArray = [1,2,3];
 // let mappedArray = map(testArray, function() {});
-// testArray != mappedArray;
+// originalArray != mappedArray;
 
 // Example 7:
-// let testArray = [1,2,3];
+// let originalArray = [1,2,3];
 // let mappedArray = map(testArray, function(number, index, array) {
 //    return number * 2;
 //  });
-// mappedArray should be [2,4, 6]
+// mappedArray should be [2,4,6]
+
+function map(originalArray, callback, optionalThisObject) {
+  let mapCallback = callback;
+  let mappedArray = [];
+  
+  if (optionalThisObject) {
+    mapCallback = callback.bind(optionalThisObject);
+  }
+  for(let i = 0; i < originalArray.length; i++) {
+    if (i in originalArray) {
+      mappedArray[i] = mapCallback(originalArray[i], i, originalArray);
+    }
+  }
+  
+  return mappedArray;
+}
 
 tests({
   'It should run the callback function array.length times': function() {
@@ -78,22 +94,35 @@ tests({
     }, { test: 'I should be accessible inside the callback'});
   },
   'It should return an array': function() {
-    let mappedArray = filter([], function() {});
+    let mappedArray = map([], function() {});
     eq(Array.isArray(mappedArray), true);
   },
   'It should return a new array not the array being mapped': function() {
-    let testArray = [1,2,3];
-    let mappedArray = filter(testArray, function(number, index, originalArray) { return true; });
-    noteq(mappedArray, testArray);
+    let originalArray = [];
+    let mappedArray = map(originalArray, function(number, index, originalArray) {});
+    noteq(mappedArray, originalArray);
   },
-  'It should return a new array that has elements returned from the callback': function() {
-    let testArray = [1,2];
-    let mappedArray = filter(testArray, function(number, index, originalArray) { 
+  'It should return a mapped array': function() {
+    let originalArray = [1];
+    let mappedArray = map(originalArray, function(number, index, originalArray) { 
       return number * 2;
     });
-    eq(filteredArray.length, 2);
-    eq(filteredArray[0], 2);
-    eq(filteredArray[1], 4);
+    eq(mappedArray[0], 2);
+  },
+  'It should return an array that is equal to the original array': function() {
+    let originalArray = [1,2,3];
+    let mappedArray = map(originalArray, function(number, index, originalArray) {
+      return number * 2;
+    });
+    eq(originalArray.length, mappedArray.length);
+  },
+  'It should skip unassigned indexes': function() {
+    let weirdArray = [,1];
+    let mappedArray = map(weirdArray, function(number) {
+      return number * 2;
+    })
+    eq(0 in mappedArray, false);
+    eq(mappedArray[1], 2);
   }
 });
 </script>
