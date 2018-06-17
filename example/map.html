@@ -40,11 +40,12 @@
 function map(originalArray, callback, optionalThisObject) {
   let mapCallback = callback;
   let mappedArray = [];
+  let length = originalArray.length;
   
   if (optionalThisObject) {
     mapCallback = callback.bind(optionalThisObject);
   }
-  for(let i = 0; i < originalArray.length; i++) {
+  for(let i = 0; i < length; i++) {
     if (i in originalArray) {
       mappedArray[i] = mapCallback(originalArray[i], i, originalArray);
     }

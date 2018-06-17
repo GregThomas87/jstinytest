@@ -40,11 +40,12 @@
 function filter(originalArray, callback, optionalThisObject) {
   let filterCallback = callback;
   let filteredArray = [];
+  let length = originalArray.length;
   
   if(optionalThisObject) {
     filterCallback = callback.bind(optionalThisObject);
   }
-  for(let i = 0; i < originalArray.length; i++) {
+  for(let i = 0; i < length; i++) {
     if(filterCallback(originalArray[i], i, originalArray)) {
       filteredArray.push(originalArray[i]);
     }

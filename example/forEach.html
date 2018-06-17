@@ -29,11 +29,12 @@
 
 function forEach(array, callback, optionalThisObject) {
   let forEachCallback = callback;
+  let length = array.length;
   if(optionalThisObject) {
     forEachCallback = callback.bind(optionalThisObject);
   }
   
-  for(let i = 0; i < array.length; i++) {
+  for(let i = 0; i < length; i++) {
     forEachCallback(array[i], i, array);
   }
 };
